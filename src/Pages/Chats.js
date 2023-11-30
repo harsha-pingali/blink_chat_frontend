@@ -15,7 +15,7 @@ const Chats = () => {
   }, []);
 
   return (
-    <div style={{ backgroundColor: "green" }}>
+    <div>
       {Array.isArray(chats) &&
         chats.map((chat) => {
           return (

@@ -3,13 +3,67 @@ import { VStack } from "@chakra-ui/layout";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { ViewIcon } from "@chakra-ui/icons";
-import { Button } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [pswdView, setPswdView] = useState(false);
-  function submitHandler() {}
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+  const navigate = useNavigate();
+  console.log(process.env.REACT_APP_API_URL);
+  const apiUrl = process.env.REACT_APP_API_URL;
+
+  async function submitHandler() {
+    setLoading(true);
+    if (!email || !password) {
+      toast({
+        title: "Please Enter All Fields !",
+        status: "warning",
+        duration: 4500,
+        isClosable: true,
+        position: "top",
+      });
+      setLoading(false);
+      return;
+    }
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        `${apiUrl}/api/user/login`,
+        { email, password },
+        config
+      );
+
+      toast({
+        title: "Login Success",
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      setLoading(false);
+      navigate("/chats");
+    } catch (error) {
+      toast({
+        title: "Error Occured",
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
+      console.log(error);
+      setLoading(false);
+    }
+  }
   return (
     <VStack spacing="5px" p={3}>
       <FormControl id="email" isRequired m={3}>
