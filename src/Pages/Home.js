@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import {
   Container,
   Box,
@@ -9,9 +10,17 @@ import {
   TabList,
   Tabs,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import Login from "../Components/Authentication/Login";
 import Signup from "../Components/Authentication/Signup";
 const Home = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    if (!userInfo) {
+      navigate("/");
+    }
+  }, [navigate]);
   return (
     <Container maxW="xl" centerContent>
       <Box

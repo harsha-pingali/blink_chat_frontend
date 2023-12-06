@@ -7,12 +7,10 @@ import Chats from "./Pages/Chats.js";
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/chats" element={<Chats />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/chats" element={<Chats />} />
+      </Routes>
     </div>
   );
 }
