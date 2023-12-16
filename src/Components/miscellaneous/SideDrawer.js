@@ -29,6 +29,8 @@ import { TbLogout2 } from "react-icons/tb";
 import { FaRegUser } from "react-icons/fa";
 import { ChatState } from "../../context/ChatProvider";
 import { useDisclosure } from "@chakra-ui/hooks";
+import ChatLoading from "../Chat/ChatLoading";
+import UserListItem from "../Users/UserListItem.js";
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -65,8 +67,21 @@ const SideDrawer = () => {
         config
       );
       console.log(data);
-    } catch (error) {}
+      if (data.length === 0) console.log("No Results Found");
+      setLoading(false);
+      setSearchResult(data);
+    } catch (error) {
+      toast({
+        title: "Failed To Load Search Results ",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-left",
+      });
+    }
   };
+
+  const accessChat = (userId) => {};
   return (
     <>
       <Box
@@ -152,6 +167,17 @@ const SideDrawer = () => {
               ></Input>
               <Button onClick={handleSearch}>GO</Button>
             </Box>
+            {loading ? (
+              <ChatLoading />
+            ) : (
+              searchResult?.map((user) => (
+                <UserListItem
+                  key={user._id}
+                  user={user}
+                  handleFunction={() => accessChat(user._id)}
+                />
+              ))
+            )}
           </DrawerBody>
 
           <DrawerFooter>
