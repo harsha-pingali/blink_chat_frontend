@@ -20,7 +20,6 @@ const ChatLoading = () => {
       <Skeleton height="3rem" />
       <Skeleton height="3rem" />
       <Skeleton height="3rem" />
-      <Skeleton height="3rem" />
     </Stack>
   );
 };

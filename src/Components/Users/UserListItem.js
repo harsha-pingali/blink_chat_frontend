@@ -32,7 +32,7 @@ const UserListItem = ({ user, handleFunction }) => {
           src={user.pic}
         />
         <Box>
-          <Text fontSize={"lg"}>{user.name}</Text>
+          <Text fontSize={"md"}>{user.name}</Text>
         </Box>
       </Box>
     </>

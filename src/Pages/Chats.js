@@ -13,7 +13,8 @@ const Chats = () => {
       <Box
         style={{
           display: "flex",
-          justifyContent: "space-around",
+          flexDirection: "row",
+          justifyContent: "space-between",
           padding: "10px",
           height: "95vh",
           width: "100%",

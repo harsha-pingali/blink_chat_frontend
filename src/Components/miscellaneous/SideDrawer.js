@@ -23,6 +23,7 @@ import {
   MenuDivider,
   useToast,
 } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/spinner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { TbLogout2 } from "react-icons/tb";
@@ -35,8 +36,8 @@ const SideDrawer = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingChat, setLoadingChat] = useState();
-  const { user } = ChatState();
+  const [loadingChat, setLoadingChat] = useState(false);
+  const { setSelectedChat, user, chats, setChats } = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -81,7 +82,40 @@ const SideDrawer = () => {
     }
   };
 
-  const accessChat = (userId) => {};
+  const accessChat = async (userId) => {
+    alert(userId);
+    try {
+      setLoadingChat(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const reqData = {
+        userId: userId,
+      };
+      console.log(reqData);
+      const { data } = await axios.post(
+        "http://localhost:7071/api/chat/",
+        reqData,
+        config
+      );
+      console.log(data);
+      if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
+      setSelectedChat(data);
+      setLoadingChat(false);
+      onClose();
+    } catch (error) {
+      alert(error.message);
+      toast({
+        title: "Failed To Fetch Chat",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-left",
+      });
+    }
+  };
   return (
     <>
       <Box
@@ -177,6 +211,20 @@ const SideDrawer = () => {
                   handleFunction={() => accessChat(user._id)}
                 />
               ))
+            )}
+            {loadingChat && (
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="teal"
+                size="lg"
+                style={{
+                  display: "flex",
+                }}
+                alignItems={"center"}
+                ml={"auto"}
+              />
             )}
           </DrawerBody>
 
