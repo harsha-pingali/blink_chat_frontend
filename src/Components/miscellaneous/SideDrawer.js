@@ -96,7 +96,7 @@ const SideDrawer = () => {
       };
       console.log(reqData);
       const { data } = await axios.post(
-        "http://localhost:7071/api/chat/",
+        `${process.env.REACT_APP_API_URL}/api/chat/`,
         reqData,
         config
       );

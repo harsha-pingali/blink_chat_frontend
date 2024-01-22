@@ -97,7 +97,13 @@ const Login = () => {
           </InputRightElement>
         </InputGroup>
       </FormControl>
-      <Button width="60%" m={1} colorScheme="orange" onClick={submitHandler}>
+      <Button
+        width="60%"
+        m={1}
+        colorScheme="orange"
+        onClick={submitHandler}
+        isLoading={loading}
+      >
         Sign In
       </Button>
     </VStack>
