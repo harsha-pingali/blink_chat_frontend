@@ -14,16 +14,12 @@ import {
   Image,
 } from "@chakra-ui/react";
 
-const UserInfoModal = ({ user, children }) => {
+const UserInfoModal = ({ user }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      {children ? (
-        <span onClick={onOpen}>{children}</span>
-      ) : (
-        <IconButton d={{ base: "flex" }} icon={<ViewIcon />} onClick={onOpen} />
-      )}
+      <IconButton d={{ base: "flex" }} icon={<ViewIcon />} onClick={onOpen} />
       <Modal size="md" onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent h="410px">

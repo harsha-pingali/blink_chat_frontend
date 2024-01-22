@@ -22,7 +22,8 @@ import { ChatState } from "../../context/ChatProvider";
 import { ViewIcon } from "@chakra-ui/icons";
 import UserBadgeItem from "../Users/UserBadgeItem";
 import UserListItem from "../Users/UserListItem";
-const UpdateGroupInfoModal = ({ fetchAgian, setFetchAgain }) => {
+const UpdateGroupInfoModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
+  // alert("Group User");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { selectedChat, setSelectedChat, user } = ChatState();
   const [groupChatName, setGroupChatName] = useState();
@@ -33,51 +34,51 @@ const UpdateGroupInfoModal = ({ fetchAgian, setFetchAgain }) => {
   const [renameLoading, setRenameLoading] = useState(false);
   const toast = useToast();
   const baseUrl = process.env.REACT_APP_API_URL;
-  const handleRemove = async (userToBeRemoved) => {
-    // if (
-    //   selectedChat.groupAdmin._id !== user._id &&
-    //   userToBeRemoved._id !== user._id
-    // ) {
-    //   toast({
-    //     title: "Only admins can remove someone!",
-    //     status: "error",
-    //     duration: 5000,
-    //     isClosable: true,
-    //     position: "bottom",
-    //   });
-    //   return;
-    // }
-    // try {
-    //   const config = {
-    //     headers: {
-    //       Authorization: `Bearer ${user.token}`,
-    //     },
-    //   };
-    //   const reqData = {
-    //     chatId: selectedChat._id,
-    //     userId: userToBeRemoved._id,
-    //   };
-    //   const { data } = await axios.put(
-    //     `${baseUrl}/api/chat/groupremove`,
-    //     reqData,
-    //     config
-    //   );
-    //   userToBeRemoved._id === user._id
-    //     ? setSelectedChat()
-    //     : setSelectedChat(data);
-    //   setFetchAgain(!fetchAgian);
-    // } catch (error) {
-    //   toast({
-    //     title: "Error Occured!",
-    //     description: error.response.data.message,
-    //     status: "error",
-    //     duration: 5000,
-    //     isClosable: true,
-    //     position: "bottom",
-    //   });
-    //   setLoading(false);
-    // }
-    // setGroupChatName("");
+  const handleRemove = async (user1) => {
+    console.log("hi");
+    //alert("handle Remove Triggered");
+    if (selectedChat.groupAdmin._id !== user._id && user1._id !== user._id) {
+      toast({
+        title: "Only admins can remove someone!",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const { data } = await axios.put(
+        `${baseUrl}/api/chat/groupremove`,
+        {
+          chatId: selectedChat._id,
+          userId: user1._id,
+        },
+        config
+      );
+      console.log(data);
+      user1._id === user._id ? setSelectedChat() : setSelectedChat(data);
+      setFetchAgain(!fetchAgain);
+      //fetchMessages();
+      setLoading(false);
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: error.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+    }
+    setGroupChatName("");
   };
   const handleRename = async () => {
     if (!groupChatName) return;
@@ -102,7 +103,8 @@ const UpdateGroupInfoModal = ({ fetchAgian, setFetchAgain }) => {
       );
       console.log(data);
       setSelectedChat(data);
-      setFetchAgain(!fetchAgian);
+      setFetchAgain(!fetchAgain);
+      fetchMessages();
       setRenameLoading(false);
     } catch (error) {
       toast({
@@ -184,7 +186,7 @@ const UpdateGroupInfoModal = ({ fetchAgian, setFetchAgain }) => {
         config
       );
       setSelectedChat(data);
-      setFetchAgain(!fetchAgian);
+      setFetchAgain(!fetchAgain);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -260,7 +262,7 @@ const UpdateGroupInfoModal = ({ fetchAgian, setFetchAgain }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={handleRemove(user)}>
+            <Button colorScheme="red" mr={3} onClick={() => handleRemove(user)}>
               Exit From Group
             </Button>
           </ModalFooter>

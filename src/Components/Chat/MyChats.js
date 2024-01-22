@@ -46,7 +46,7 @@ const MyChats = ({ fetchAgain }) => {
   }, [fetchAgain]);
   return (
     <Box
-      display={{ base: selectedChat === "" ? "flex" : "none", md: "flex" }}
+      display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
       flexDir="column"
       alignItems="center"
       p={3}
@@ -85,17 +85,18 @@ const MyChats = ({ fetchAgain }) => {
         p={3}
         bg="#F7FAFC"
         w="100%"
-        style={{
-          minHeight: "100%",
-        }}
         borderRadius="lg"
-        overflowY="hidden"
+        overflowY="scroll"
       >
         {chats !== null ? (
           <Stack overflowY={"scroll"}>
             {chats.map((item) => (
               <Box
-                onClick={() => setSelectedChat(item)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setSelectedChat(item);
+                }}
                 cursor="pointer"
                 bg={selectedChat === item ? "#38b2ac" : "#CBD5E0"}
                 color={selectedChat === item ? "white" : "black"}
