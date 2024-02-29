@@ -6,7 +6,7 @@ import { ViewIcon } from "@chakra-ui/icons";
 import { Button, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import cookie from "../Cookies";
 const Signup = () => {
   const [email, setEmail] = useState();
   const [name, setName] = useState();
@@ -17,6 +17,7 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
+  const baseUrl = process.env.REACT_APP_API_URL;
   function postDetails(pics) {
     setLoading(true);
     if (pics === undefined) {
@@ -101,11 +102,12 @@ const Signup = () => {
         },
       };
       const { data } = await axios.post(
-        "http://localhost:7071/api/user",
+        `${baseUrl}/api/user/`,
         { name, email, password, pic },
         config
       );
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      cookie.set("userInfo", data);
+      //localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
       navigate("/chats");
     } catch (error) {

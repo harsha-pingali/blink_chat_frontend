@@ -9,6 +9,9 @@ import { MdGroupAdd } from "react-icons/md";
 import ChatLoading from "./ChatLoading";
 import GroupChatModal from "../miscellaneous/GroupChatModal";
 import { getSender } from "../config/ChatLogics";
+import { useDispatch } from "react-redux";
+import cookie from "../Cookies";
+import { loadChats } from "../../features/chatSlice";
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
@@ -17,6 +20,7 @@ const MyChats = ({ fetchAgain }) => {
   //   if (loggedUser._id === userArray[0]._id) return userArray[1].name;
   //   else return userArray[0].name;
   // };
+  const dispatch = useDispatch();
   const fetchChats = async () => {
     try {
       const config = {
@@ -41,9 +45,14 @@ const MyChats = ({ fetchAgain }) => {
     }
   };
   useEffect(() => {
-    setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
+    setLoggedUser(cookie.get("userInfo"));
     fetchChats();
   }, [fetchAgain]);
+
+  useEffect(() => {
+    dispatch(loadChats(selectedChat?._id));
+  }, [selectedChat]);
+
   return (
     <Box
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}

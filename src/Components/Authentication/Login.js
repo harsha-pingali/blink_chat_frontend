@@ -7,6 +7,8 @@ import { Button, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import cookie from "../Cookies";
+
 const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -14,8 +16,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
-  console.log(process.env.REACT_APP_API_URL);
   const apiUrl = process.env.REACT_APP_API_URL;
+  console.log(apiUrl);
 
   async function submitHandler() {
     setLoading(true);
@@ -49,19 +51,23 @@ const Login = () => {
         isClosable: true,
         position: "top",
       });
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      cookie.set("userInfo", data);
+      //localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
       navigate("/chats");
     } catch (error) {
+      console.log(error.message);
       toast({
-        title: "Error Occured",
+        title: "Verify the credentials!!",
         status: "warning",
         duration: 4000,
         isClosable: true,
-        position: "top",
+        position: "top-right",
       });
-      console.log(error);
       setLoading(false);
+      navigate("/");
+      console.log(error);
+      return;
     }
   }
   return (

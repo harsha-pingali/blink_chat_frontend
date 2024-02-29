@@ -32,6 +32,7 @@ import { ChatState } from "../../context/ChatProvider";
 import { useDisclosure } from "@chakra-ui/hooks";
 import ChatLoading from "../Chat/ChatLoading";
 import UserListItem from "../Users/UserListItem.js";
+import cookie from "../Cookies.js";
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -42,6 +43,7 @@ const SideDrawer = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
+    cookie.remove("userInfo");
     navigate("/");
   };
   const toast = useToast();
