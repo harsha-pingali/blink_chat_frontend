@@ -79,6 +79,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   useEffect(() => {
     socket = io(baseUrl, {
       withCredentials: true,
+      path: "/socket",
+      reconnection: true,
+      transports: ["websocket", "polling"],
+      reconnectionAttempts: 5,
     });
 
     socket.emit("setup", user);
