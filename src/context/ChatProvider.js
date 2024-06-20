@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import cookie from "../Components/Cookies";
 const chatContext = createContext();
 
@@ -8,11 +8,14 @@ const ChatProvider = ({ children }) => {
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setChats] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
   useEffect(() => {
     // const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     const userInfo = cookie.get("userInfo");
+    const requestedPath = location.pathname;
     setUser(userInfo);
-    if (!userInfo) {
+    if (!userInfo && requestedPath === "/reset") navigate("/reset");
+    else if (!userInfo) {
       navigate("/");
     }
   }, [navigate]);

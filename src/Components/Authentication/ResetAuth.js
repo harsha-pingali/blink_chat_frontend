@@ -8,22 +8,26 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import cookie from "../Cookies";
+import { useDisclosure } from "@chakra-ui/react";
+import OtpModal from "../Users/OtpModal";
 
-const Login = () => {
+const ResetAuth = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [pswdView, setPswdView] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [modalState, setModalState] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
   const apiUrl = process.env.REACT_APP_API_URL;
   console.log(apiUrl);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   async function submitHandler() {
+    console.log("email :" + email);
     setLoading(true);
-    if (!email || !password) {
+    if (!email) {
       toast({
-        title: "Please Enter All Fields !",
+        title: "Please Enter Email to get Code !",
         status: "warning",
         duration: 4500,
         isClosable: true,
@@ -31,44 +35,30 @@ const Login = () => {
       });
       setLoading(false);
       return;
-    }
-    try {
+    } else {
       const config = {
         headers: {
           "Content-type": "application/json",
         },
       };
-      const { data } = await axios.post(
-        `${apiUrl}/api/user/login`,
-        { email, password },
-        config
-      );
 
-      toast({
-        title: "Login Success",
-        status: "success",
-        duration: 4000,
-        isClosable: true,
-        position: "top",
-      });
-      cookie.set("userInfo", data);
-      //localStorage.setItem("userInfo", JSON.stringify(data));
+      try {
+        const { data } = await axios.post(
+          `${apiUrl}/api/user/resetpass`,
+          { email: email },
+          config
+        );
+        console.log(data);
+      } catch (error) {
+        console.log(error.message);
+        setLoading(false);
+        return;
+      }
       setLoading(false);
-      navigate("/chats");
-    } catch (error) {
-      console.log(error.message);
-      toast({
-        title: "Verify the credentials!!",
-        status: "warning",
-        duration: 4000,
-        isClosable: true,
-        position: "top-right",
-      });
-      setLoading(false);
-      navigate("/");
-      console.log(error);
-      return;
+      setModalState(true);
+      onOpen();
     }
+    return;
   }
   return (
     <VStack spacing="5px" p={3}>
@@ -80,7 +70,7 @@ const Login = () => {
         ></Input>
       </FormControl>
 
-      <FormControl id="password" isRequired m={3}>
+      {/* <FormControl id="password" isRequired m={3}>
         <FormLabel color="white">Password</FormLabel>
         <InputGroup>
           <Input
@@ -102,10 +92,7 @@ const Login = () => {
             />
           </InputRightElement>
         </InputGroup>
-        <Link m={3} pb={2} href="/reset">
-          Forgot Password ?
-        </Link>
-      </FormControl>
+      </FormControl> */}
       <Button
         width="60%"
         m={1}
@@ -113,10 +100,11 @@ const Login = () => {
         onClick={submitHandler}
         isLoading={loading}
       >
-        Sign In
+        Submit
       </Button>
+      <OtpModal isOpen={isOpen} onClose={onClose} />
     </VStack>
   );
 };
 
-export default Login;
+export default ResetAuth;

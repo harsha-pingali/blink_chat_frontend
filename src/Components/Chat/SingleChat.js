@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { ChatState } from "../../context/ChatProvider";
 import { ViewIcon } from "@chakra-ui/icons";
+import { IoSend } from "react-icons/io5";
 import {
   Box,
   Text,
@@ -274,6 +275,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 onChange={typingHandler}
                 value={newMessage}
               />
+              {/* <IoSend
+                size={30}
+                style={{ marginLeft: "0.9rem", marginTop: "0.25rem" }}
+                onClick={(e) => sendMessage(e)}
+              /> */}
             </FormControl>
           </Box>
         </>
